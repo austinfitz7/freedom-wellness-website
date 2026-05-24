@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Freedom Wellness | Merrimack, NH</title>
+  <meta name="description" content="Contact Austin Fitzgerald at Freedom Wellness — (603) 714-9078 | info@freedomwellnessnh.com | Merrimack, NH">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style type="text/css">
+  @import url("css/style.css");
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">
+      <span class="freedom">Freedom</span>
+      <span class="wellness">Wellness</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="waitlist.html" class="nav-cta">Join Waitlist</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <h1>Get in <span>Touch</span></h1>
+    <p>Real conversations with real people. Reach out anytime — Austin or Sam responds personally.</p>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- LEFT: Contact info -->
+        <div>
+          <p class="section-eyebrow">Contact Info</p>
+          <h2 class="section-title">Let's <span>Talk</span></h2>
+          <div class="section-divider"></div>
+          <p style="color:var(--med-gray);margin-bottom:2rem;">Whether you have questions about our services, want to learn more about the Avellum launch, or just want to chat about your health goals — we're here. Text or call is usually fastest.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <h4>Phone / Text</h4>
+              <p><a href="tel:6037149078">(603) 714-9078</a></p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <h4>Email</h4>
+              <p><a href="mailto:info@freedomwellnessnh.com">info@freedomwellnessnh.com</a></p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <h4>Location</h4>
+              <p>Merrimack, NH</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">🛒</div>
+            <div>
+              <h4>Shop Products</h4>
+              <p><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">freedomwellnessnh.com/shop</a></p>
+            </div>
+          </div>
+
+          <div style="margin-top:2rem;background:var(--navy);border-radius:10px;padding:1.5rem;">
+            <p style="color:var(--gold);font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;">Response Time</p>
+            <p style="color:rgba(255,255,255,0.8);font-size:0.9rem;">We respond to every message personally — usually within a few hours. Text is fastest.</p>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact form -->
+        <div>
+          <p class="section-eyebrow">Send a Message</p>
+          <h2 class="section-title">What's on <span>Your Mind?</span></h2>
+          <div class="section-divider"></div>
+          <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number (optional)</label>
+              <input type="tel" id="phone" name="phone" placeholder="(603) 555-0000">
+            </div>
+            <div class="form-group">
+              <label for="interest">I'm interested in...</label>
+              <select id="interest" name="interest">
+                <option value="">Select a service</option>
+                <option value="glp1">GLP-1 / GIP (Weight Loss)</option>
+                <option value="peptides">Peptide Therapy</option>
+                <option value="nad">Nano NAD</option>
+                <option value="xs">XS Energy</option>
+                <option value="nutrilite">Nutrilite Supplements</option>
+                <option value="waitlist">Join the Avellum Waitlist</option>
+                <option value="general">General Question</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell me what you're looking for or ask me anything..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="border:none;cursor:pointer;width:100%;font-size:1rem;padding:1rem;">Send Message</button>
+          </form>
+          <p id="form-success" style="display:none;margin-top:1rem;color:var(--navy);font-weight:600;text-align:center;">✅ Message sent! I'll get back to you personally within a few hours.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST CTA -->
+  <section style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:var(--white);text-align:center;">
+    <div class="container">
+      <h2 style="color:var(--white);margin-bottom:1rem;">Don't Forget to <span style="color:var(--gold);">Join the Waitlist</span></h2>
+      <p style="color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto 2rem;">Avellum launches September 2026. Waitlist members get priority access and a personal call from Austin before we open to the public.</p>
+      <a href="waitlist.html" class="btn-primary">Join the Waitlist — Free</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="freedom">Freedom</span>
+        <span class="wellness">Wellness</span>
+        <p>Veteran-owned wellness consulting based in Merrimack, NH.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#glp1">GLP-1 / GIP</a></li>
+          <li><a href="services.html#peptides">Peptide Therapy</a></li>
+          <li><a href="services.html#nad">Nano NAD</a></li>
+          <li><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">XS Energy</a></li>
+          <li><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">Nutrilite</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="waitlist.html">Join Waitlist</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Freedom Wellness · Austin &amp; Samantha Fitzgerald · Merrimack, NH</p>
+      <span class="veteran-badge">⭐ Veteran-Owned Small Business</span>
+    </div>
+  </footer>
+
+  <script>
+    function toggleNav() {
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>

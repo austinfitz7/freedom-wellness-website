@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wellness Advisor | Freedom Wellness | Merrimack, NH</title>
+  <meta name="description" content="Get a personalized wellness recommendation from Freedom Wellness. Tell us your health goals and we'll find the right Nutrilite or XS product for you.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+  @import url("../css/style.css");
+
+    .advisor-hero {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+      padding: 140px 2rem 4rem;
+      text-align: center;
+      color: var(--white);
+    }
+    .advisor-hero h1 { color: var(--white); margin-bottom: 0.75rem; }
+    .advisor-hero h1 span { color: var(--gold); }
+    .advisor-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 580px; margin: 0 auto; }
+
+    .advisor-section { background: var(--off-white); padding: 3rem 2rem 5rem; }
+    .advisor-wrap { max-width: 780px; margin: 0 auto; }
+
+    .chat-container {
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid rgba(27,58,107,0.12);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: var(--navy);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 2px solid var(--gold);
+    }
+    .chat-header-avatar {
+      width: 40px; height: 40px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-weight: 900; font-size: 1rem;
+      color: var(--navy-dark); flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-family: var(--font-serif); font-weight: 700; font-size: 1rem; color: var(--white); }
+    .chat-header-status { font-size: 0.72rem; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 0.4rem; }
+    .status-dot { width: 7px; height: 7px; background: #4CAF50; border-radius: 50%; display: inline-block; }
+
+    .chat-messages {
+      padding: 1.5rem;
+      min-height: 280px; max-height: 560px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 1.25rem;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--gold-light); border-radius: 2px; }
+
+    .msg { display: flex; gap: 0.75rem; animation: fadeUp 0.35s ease forwards; opacity: 0; }
+    .msg.user { flex-direction: row-reverse; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .msg.ai .msg-avatar { background: var(--navy); color: var(--gold); font-family: var(--font-serif); font-size: 0.9rem; }
+    .msg.user .msg-avatar { background: var(--gold-light); color: var(--navy-dark); }
+
+    .msg-bubble {
+      max-width: 75%; padding: 0.85rem 1.1rem;
+      border-radius: 10px; font-size: 0.92rem; line-height: 1.65;
+      font-family: var(--font-sans);
+    }
+    .msg.ai .msg-bubble { background: var(--off-white); color: var(--dark-gray); border-top-left-radius: 2px; }
+    .msg.user .msg-bubble { background: var(--navy); color: var(--white); border-top-right-radius: 2px; }
+
+    .typing-indicator { display: flex; gap: 0.75rem; align-items: flex-start; animation: fadeUp 0.3s ease forwards; }
+    .typing-dots {
+      background: var(--off-white); padding: 0.85rem 1.1rem;
+      border-radius: 10px; border-top-left-radius: 2px;
+      display: flex; gap: 5px; align-items: center;
+    }
+    .typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: bounce 1.2s ease infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-6px); } }
+
+    .recommendations { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .rec-card {
+      background: var(--white); border: 1px solid rgba(27,58,107,0.12);
+      border-radius: 8px; padding: 1rem 1.1rem;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 4px solid var(--gold);
+    }
+    .rec-card.avellum-card { background: var(--navy); border: none; border-left: 4px solid var(--gold); }
+    .rec-card-info { flex: 1; }
+    .rec-card-name { font-family: var(--font-serif); font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+    .avellum-card .rec-card-name { color: var(--white); }
+    .rec-card-reason { font-size: 0.82rem; color: var(--med-gray); line-height: 1.5; }
+    .avellum-card .rec-card-reason { color: rgba(255,255,255,0.65); }
+    .rec-card-price { font-size: 0.75rem; font-weight: 700; color: var(--gold); margin-top: 0.2rem; }
+    .rec-card-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: var(--red); color: var(--white); padding: 0.15rem 0.5rem; border-radius: 3px; margin-bottom: 0.3rem; display: inline-block; }
+    .rec-btn {
+      display: inline-block; background: var(--red); color: var(--white);
+      text-decoration: none; font-family: var(--font-sans);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 0.55rem 1rem; border-radius: 5px; white-space: nowrap;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .rec-btn:hover { background: #b01520; }
+    .avellum-card .rec-btn { background: var(--gold); color: var(--navy-dark); }
+    .avellum-card .rec-btn:hover { background: var(--gold-light); }
+
+    .email-capture {
+      margin-top: 0.5rem; background: var(--light-blue);
+      border: 1px solid rgba(27,58,107,0.15); border-radius: 8px; padding: 1.25rem;
+    }
+    .email-capture p { font-size: 0.88rem; color: var(--navy); margin-bottom: 1rem; line-height: 1.5; font-weight: 600; }
+    .email-fields { display: flex; flex-direction: column; gap: 0.6rem; }
+    .email-fields input {
+      width: 100%; padding: 0.7rem 0.9rem;
+      border: 1px solid rgba(27,58,107,0.2); border-radius: 6px;
+      font-family: var(--font-sans); font-size: 0.9rem;
+      background: var(--white); color: var(--dark-gray);
+      outline: none; transition: border-color 0.2s;
+    }
+    .email-fields input:focus { border-color: var(--navy); }
+    .email-fields input::placeholder { color: #aaa; }
+    .email-submit {
+      width: 100%; padding: 0.75rem; background: var(--navy); color: var(--white);
+      border: none; border-radius: 6px; font-family: var(--font-sans);
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s; margin-top: 0.25rem;
+    }
+    .email-submit:hover { background: var(--navy-dark); }
+    .email-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .email-skip { text-align: center; margin-top: 0.6rem; font-size: 0.78rem; color: var(--med-gray); cursor: pointer; }
+    .email-skip:hover { color: var(--navy); text-decoration: underline; }
+
+    .chat-input-area {
+      border-top: 1px solid rgba(27,58,107,0.1);
+      padding: 1rem 1.25rem; display: flex; gap: 0.75rem;
+      align-items: flex-end; background: var(--white);
+    }
+    #userInput {
+      flex: 1; padding: 0.75rem 1rem;
+      border: 1px solid rgba(27,58,107,0.2); border-radius: 6px;
+      font-family: var(--font-sans); font-size: 0.92rem; color: var(--dark-gray);
+      background: var(--off-white); outline: none; resize: none;
+      min-height: 44px; max-height: 120px; line-height: 1.5; transition: border-color 0.2s;
+    }
+    #userInput:focus { border-color: var(--navy); background: var(--white); }
+    #userInput::placeholder { color: #aaa; }
+    .send-btn {
+      width: 44px; height: 44px; background: var(--red); border: none;
+      border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .send-btn:hover { background: #b01520; }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .send-btn svg { width: 18px; height: 18px; fill: var(--white); }
+
+    .reset-btn {
+      display: block; margin: 1.5rem auto 0;
+      background: none; border: 1px solid rgba(27,58,107,0.2); color: var(--med-gray);
+      font-family: var(--font-sans); font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 0.6rem 1.5rem; cursor: pointer; border-radius: 6px; transition: all 0.2s;
+    }
+    .reset-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+    .success-msg { text-align: center; padding: 1rem; background: rgba(27,58,107,0.06); border-radius: 8px; margin-top: 0.5rem; }
+    .success-msg p { font-size: 0.88rem; color: var(--navy); font-weight: 600; }
+
+    .advisor-trust { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--med-gray); letter-spacing: 0.5px; }
+    .trust-item span { font-size: 1rem; }
+
+    .how-it-works { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .how-step { text-align: center; padding: 1.25rem; }
+    .how-step-num {
+      width: 40px; height: 40px; background: var(--navy); color: var(--gold);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); font-weight: 900; font-size: 1.1rem; margin: 0 auto 0.75rem;
+    }
+    .how-step h4 { color: var(--navy); font-size: 0.9rem; margin-bottom: 0.35rem; }
+    .how-step p { font-size: 0.82rem; color: var(--med-gray); }
+
+    @media (max-width: 600px) {
+      .rec-card { flex-direction: column; }
+      .chat-messages { max-height: 420px; }
+      .msg-bubble { max-width: 88%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">
+      <span class="freedom">Freedom</span>
+      <span class="wellness">Wellness</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="advisor.html">Wellness Advisor</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="waitlist.html" class="nav-cta">Join Waitlist</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="advisor-hero">
+    <p class="section-eyebrow" style="color:var(--gold);margin-bottom:0.75rem;">AI-Powered · Personalized · Free</p>
+    <h1>Your Free <span>Wellness Advisor</span></h1>
+    <div class="section-divider center" style="margin:1.25rem auto;"></div>
+    <p>Tell us what's going on in your own words — low energy, joint pain, gut issues, weight loss, better sleep — and we'll find the right solution from our full product lineup.</p>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section style="background:var(--white);padding:3rem 2rem;">
+    <div class="container" style="max-width:780px;">
+      <p class="section-eyebrow text-center">How It Works</p>
+      <div class="how-it-works">
+        <div class="how-step">
+          <div class="how-step-num">1</div>
+          <h4>Describe Your Goals</h4>
+          <p>Type your health concern, symptom, or goal in plain English — no medical jargon needed.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">2</div>
+          <h4>Get Your Recommendation</h4>
+          <p>Our AI advisor matches you to the best-fit products from the full Nutrilite and XS lineup with direct shop links.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">3</div>
+          <h4>Austin or Sam Follows Up</h4>
+          <p>Leave your email and we reach out personally — real people, real conversations, no bots.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVISOR CHAT -->
+  <section class="advisor-section">
+    <div class="advisor-wrap">
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-header-avatar">FW</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name">Freedom Wellness Advisor</div>
+            <div class="chat-header-status"><span class="status-dot"></span> Online — Austin &amp; Sam · Merrimack, NH</div>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <div class="chat-input-area">
+          <textarea id="userInput" rows="1"
+            placeholder="e.g. I have no energy, my knees are killing me, and I can't sleep…"
+            oninput="autoResize(this)"
+            onkeydown="handleKey(event)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send">
+            <svg viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2v7z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="reset-btn" onclick="resetChat()">↺ Start Over</button>
+
+      <div class="advisor-trust">
+        <div class="trust-item"><span>🎖️</span> Veteran-Owned</div>
+        <div class="trust-item"><span>🔒</span> Your info stays private</div>
+        <div class="trust-item"><span>💬</span> Real follow-up from Austin or Sam</div>
+        <div class="trust-item"><span>🆓</span> Completely free</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="freedom">Freedom</span>
+        <span class="wellness">Wellness</span>
+        <p>Veteran-owned wellness consulting based in Merrimack, NH. GLP-1, peptide therapy, NAD, XS Energy, and Nutrilite supplements. Launching September 2026.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#glp1">GLP-1 / GIP</a></li>
+          <li><a href="services.html#peptides">Peptide Therapy</a></li>
+          <li><a href="services.html#nad">Nano NAD</a></li>
+          <li><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">XS Energy</a></li>
+          <li><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">Nutrilite</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="advisor.html">Wellness Advisor</a></li>
+          <li><a href="waitlist.html">Join Waitlist</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="https://www.amway.com/en_US/myshop/Fitzgerald?logout=true" target="_blank">Shop Products</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Freedom Wellness · Austin &amp; Samantha Fitzgerald · Merrimack, NH</p>
+      <span class="veteran-badge">⭐ Veteran-Owned Small Business</span>
+    </div>
+  </footer>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/27608761/4oqv5pz/';
+const API_ENDPOINT = '/.netlify/functions/advisor';
+
+// ============================================================
+// FULL PRODUCT CATALOG — All URLs confirmed
+// ============================================================
+const PRODUCT_CATALOG = `
+FREEDOM WELLNESS — Full Product Catalog (Nutrilite & XS via Amway/Fitzgerald)
+Shop base: https://www.amway.com/en_US/myshop/Fitzgerald
+
+ENERGY & MENTAL FOCUS:
+- Nutrilite Double X 31-Day (A4300) — Premier multivitamin, 12 concentrated fruits/veg/grains. Foundational energy, immunity, overall wellness. $66. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Double-X%26trade%3B-Vitamin-Mineral-Phytonutrient-Supplement---31-Day-Supply-with-3-Compartment-Case-p-A4300?product_referrer=myshop
+- Nutrilite Ultra Focus Energy Pack (123842) — Mental focus + sustained energy combo. $42. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Ultra-Focus-Energy-Pack-p-123842
+- Nutrilite Vitamin B Dual-Action 120ct (110171) — B vitamins for energy metabolism, nerve health. $38. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Vitamin-B-Dual-Action---120-Tablets-p-110171
+- Nutrilite Organics Lion's Mane Mushroom (308639) — Brain fog, focus, cognitive clarity. $34. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Organics-Lion%E2%80%99s-Mane-Mushroom-Capsules-p-308639
+- Nutrilite Magnesium (128032) — Energy production, muscle function, sleep quality. $34. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Magnesium-p-128032
+- Nutrilite Vitamin D (119346) — Mood, energy, immunity, bone health. $29. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Vitamin-D-p-119346
+
+XS ENERGY DRINKS:
+- XS Energy Drink Variety Case 12oz (127070) — Clean energy, no sugar, 10+ flavors. $37. URL: https://www.amway.com/en_US/XS%E2%84%A2-Energy-Drink-12-oz-%E2%80%93-Variety-Case-p-127070?product_referrer=myshop
+- XS Energy + Burn Blue Razz / Kiwi Strawberry — Energy plus fat-burning support. $42. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS Sparkling Juiced Energy — Lighter fruit-forward energy. $37. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+FITNESS & PROTEIN:
+- XS Grass-Fed Whey Protein Vanilla (128156) — Clean post-workout protein. $58. URL: https://www.amway.com/en_US/XS%E2%84%A2-Grass-Fed-Whey-Protein-%E2%80%93-Vanilla-p-128156?product_referrer=myshop
+- XS Grass-Fed Whey Protein Chocolate (128154) — $58. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS Protein Shakes Vanilla Crème (110370) — RTD protein. $53. URL: https://www.amway.com/en_US/XS%E2%84%A2-Sports-Protein-Shakes-%E2%80%93-Vanilla-Cr%C3%A8me-p-110370?product_referrer=myshop
+- XS Protein Bars Chocolate Peanut Butter (110385) — Clean on-the-go protein. $42. URL: https://www.amway.com/en_US/XS%E2%84%A2-Sports-Protein-Bars-%E2%80%93-Chocolate-Peanut-Butter-p-110385?product_referrer=myshop
+- XS Pre-Workout Boost — Clean pre-workout energy. $55 pouch / $33 sticks. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS Post-Workout Recovery — Recovery after training. $55 pouch / $33 sticks. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS Muscle Multiplier — Amino acids for muscle building. $50. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS CocoWater Hydration — Electrolyte hydration drink mix. $28. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+WEIGHT MANAGEMENT:
+- Nutrilite Slimmetry (117085) — Supports healthy weight management. $33. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Slimmetry-Dietary-Supplement-p-117085
+- Nutrilite Carb Blocker (100193) — Helps manage carbohydrate absorption. $37. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Carb-Blocker-p-100193
+- Nutrilite Metabolic Pre & Postbiotic (127620) — Gut + metabolic health combo. $40. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- XS Energy + Burn — Energy plus thermogenic support. $42. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+JOINT & MOBILITY:
+- Nutrilite Joint Health 30-Day (104664) — Glucosamine, chondroitin, boswellia for joint comfort. $36. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Joint-Health---30-Day-Supply-p-104664
+- Nutrilite Joint Health 60-Day (106964) — $64. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Organics Turmeric (308642) — Anti-inflammatory, joint and whole-body support. $33. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Advanced Omega (126136) — Omega-3 for inflammation, joints, heart, brain. $40. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Advanced-Omega--p-126136
+- Nutrilite Cal Mag D (110610) — Calcium, magnesium, vitamin D for bone and joint health. $43. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+GUT & DIGESTIVE HEALTH:
+- Nutrilite Digestive Enzyme (A8903) — Bloating, gas, indigestion, nutrient absorption. $39. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Digestive-Enzyme-p-A8903
+- Nutrilite Balance Within Probiotic (120571) — Gut flora balance, immunity, digestion. $43. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Begin Daily GI Primer (127725) — Comprehensive gut health foundation. $78. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Prebiotic Fiber (127444) — Feeds good gut bacteria, supports microbiome. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Prebiotic-Fiber-p-127444
+- Nutrilite Fiber Powder (102736) — Digestive regularity. $31. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Stress Relief Probiotic (125514) — Gut-brain axis, stress + digestive support. $48. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Stress-Relief-Probiotic--p-125514
+
+HEART & CIRCULATION:
+- Nutrilite Cholesterol Health (100070) — Plant sterols for healthy cholesterol. $35. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Cholesterol-Health-p-100070
+- Nutrilite Advanced Omega (126136) — Heart, inflammation, brain. $40. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Advanced-Omega--p-126136
+- Nutrilite Heart Health CoQ10 (A8601) — Cardiovascular energy and function. $20. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Garlic Heart Care (A5923) — Circulation and heart support. $32. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+IMMUNITY:
+- Nutrilite Immunity Echinacea (A5986) — Immune defense, cold prevention. $39. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Immunity-Echinacea-p-A5986
+- Nutrilite Vitamin C Extended Release (109745) — Sustained immune and antioxidant support. $20. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Vitamin-C-Extended-Release-p-109745
+- Nutrilite Immunity Defense Zinc + Holy Basil (124692) — $17.75. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Organics Immunity Superfood Powder (125936) — Greens + immunity daily support. $45. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+SLEEP:
+- Nutrilite Sleep Health (A8992) — Melatonin + botanicals for sleep quality. $29. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Sleep-Health-p-A8992
+- n* by Nutrilite Sweet Dreams Gummies (124506) — Sleep gummies. $19.50. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Magnesium (128032) — Also excellent for sleep quality. $34. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Magnesium-p-128032
+- Nutrilite Organics Chamomile Tea (308636) — Calming evening tea. $17. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+STRESS & MOOD:
+- Nutrilite Organics Ashwagandha (308641) — Adaptogen for stress, cortisol, energy balance. $44. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Stress Relief Probiotic (125514) — Gut-brain stress support. $48. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Stress-Relief-Probiotic--p-125514
+- n* by Nutrilite Less Stress More Yes Gummies (124505) — Relax gummies. $19.50. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Memory Builder (111106) — Cognitive support. $42. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Organics Lion's Mane Mushroom (308639) — Brain clarity and cognitive function. $34. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Organics-Lion%E2%80%99s-Mane-Mushroom-Capsules-p-308639
+
+MEN'S HEALTH:
+- Nutrilite Organics Horny Goat Weed & Tribulus (308640) — Male vitality, energy, libido. $45. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Organics-Horny-Goat-Weed-%26-Tribulus-Capsules-p-308640
+- Nutrilite Men's Pack (123365) — Complete men's daily wellness bundle. $74. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Men%E2%80%99s-Pack-p-123365
+- Nutrilite Men's Daily Multivitamin (125557) — $34. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Prostate Health (A8004) — $46. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+WOMEN'S HEALTH:
+- Nutrilite Iron Folic (102046) — Iron + folic acid, energy, women's health. $17. URL: https://www.amway.com/en_US/Nutrilite%26trade%3B-Iron-Folic-p-102046
+- Nutrilite Women's Pack (123372) — Complete women's daily wellness bundle. $59. URL: https://www.amway.com/en_US/Nutrilite%E2%84%A2-Women%E2%80%99s-Pack-p-123372
+- Nutrilite Women's Daily Multivitamin (125559) — $34. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Cycle Support (126161) — Hormonal balance support. $38. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Complete Menopause Support (126154) — $39. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- n* by Nutrilite Collagen Peptides (125553) — Skin, hair, nails, joints. $32. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Hair Skin & Nail Health (A7553) — $26. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+KIDS & FAMILY:
+- Nutrilite Kids Daily Chewable Multivitamins (123043) — $19. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Kids Complete Immunity (123046) — Fast-melt immunity powder. $29. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+- Nutrilite Kids Brainiums DHA (305554) — Brain development. $26. URL: https://www.amway.com/en_US/myshop/Fitzgerald
+
+TELEHEALTH — Via Avellum (Launching September 2026):
+- GLP-1 / GIP Weight Loss — Physician-supervised, compounded, legal. Most clinically effective weight loss option. Waitlist: https://www.freedomwellnessnh.com/waitlist
+- Peptide Therapy (BPC-157, TB-500, CJC-1295) — Recovery, performance, healing, injury repair. Waitlist: https://www.freedomwellnessnh.com/waitlist
+- Nano NAD — Cellular energy, anti-aging, cognitive clarity, longevity. Waitlist: https://www.freedomwellnessnh.com/waitlist
+
+ADVISOR RULES:
+- Maximum 3 product recommendations per response
+- Always recommend Double X as a foundational add-on for energy or general wellness unless user says they already take it
+- For serious weight loss goals, always mention GLP-1 via Avellum alongside supplements
+- For products without a specific URL, use https://www.amway.com/en_US/myshop/Fitzgerald
+- Be warm and conversational like a knowledgeable friend — not a salesperson
+- Never make specific medical claims. Use "designed to support" or "many people find helpful for"
+- You represent Austin & Sam Fitzgerald, veteran-owned Freedom Wellness, Merrimack NH
+- Keep responses concise — 2-3 sentences before showing recommendations
+`;
+
+// ============================================================
+// STATE
+// ============================================================
+let conversationHistory = [];
+let emailCaptured = false;
+let awaitingEmail = false;
+let isLoading = false;
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  addAIMessage("Hi! I'm the Freedom Wellness advisor. Tell me what's going on — low energy, joint pain, gut issues, weight loss, trouble sleeping, or anything else — and I'll find exactly the right solution from our full product lineup. What's your main concern today?");
+});
+
+// ============================================================
+// SEND MESSAGE
+// ============================================================
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+  input.value = '';
+  autoResize(input);
+  addUserMessage(text);
+  conversationHistory.push({ role: 'user', content: text });
+  setLoading(true);
+  showTyping();
+  try {
+    const response = await callClaude();
+    hideTyping();
+    if (response.recommendations && response.recommendations.length > 0) {
+      addAIMessage(response.message, response.recommendations);
+      if (!emailCaptured && !awaitingEmail) {
+        setTimeout(() => { addEmailCapture(); awaitingEmail = true; }, 900);
+      }
+    } else {
+      addAIMessage(response.message);
+    }
+    conversationHistory.push({ role: 'assistant', content: response.message });
+  } catch (err) {
+    hideTyping();
+    addAIMessage("Sorry about that — please try your message again in a moment.");
+    console.error(err);
+  }
+  setLoading(false);
+}
+
+// ============================================================
+// NETLIFY FUNCTION CALL (API proxy — keeps key secure)
+// ============================================================
+async function callClaude() {
+  const systemPrompt = `You are a warm, knowledgeable wellness advisor for Freedom Wellness — a veteran-owned company in Merrimack, NH run by Austin and Samantha Fitzgerald (both 100% disabled veterans). You help people find the right health products from the Nutrilite and XS lineup, and Avellum telehealth services launching September 2026.
+
+PRODUCT CATALOG:
+${PRODUCT_CATALOG}
+
+RESPONSE FORMAT — respond ONLY with valid JSON, no markdown, no preamble, no backticks:
+{
+  "message": "Your conversational response (2-3 sentences max)",
+  "recommendations": [
+    {
+      "name": "Exact Product Name",
+      "reason": "Why this specifically fits their situation (1-2 sentences)",
+      "price": "$XX.XX",
+      "url": "exact product URL from catalog",
+      "isAvellum": false
+    }
+  ]
+}
+
+If you need one clarifying question before recommending, use empty recommendations array.
+For Avellum products set isAvellum: true and url: https://www.freedomwellnessnh.com/waitlist
+Maximum 3 recommendations. Include price where known from catalog.
+For products without a specific URL use https://www.amway.com/en_US/myshop/Fitzgerald`;
+
+  const res = await fetch(API_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: conversationHistory.slice(-10)
+    })
+  });
+
+  if (!res.ok) throw new Error('API error ' + res.status);
+  const data = await res.json();
+  const raw = data.content.find(b => b.type === 'text')?.text || '{}';
+  try {
+    return JSON.parse(raw.replace(/```json|```/g, '').trim());
+  } catch {
+    return { message: raw, recommendations: [] };
+  }
+}
+
+// ============================================================
+// EMAIL CAPTURE
+// ============================================================
+function addEmailCapture() {
+  const messages = document.getElementById('chatMessages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ai';
+  wrap.style.cssText = 'opacity:1;animation:none;';
+  wrap.id = 'emailCapture';
+  wrap.innerHTML = `
+    <div class="msg-avatar">FW</div>
+    <div style="flex:1">
+      <div class="email-capture">
+        <p>📬 Want me to send your recommendation to your inbox? Austin or Sam will follow up personally.</p>
+        <div class="email-fields">
+          <input type="text" id="captureName" placeholder="Your first name" />
+          <input type="email" id="captureEmail" placeholder="your@email.com" />
+          <button class="email-submit" onclick="submitEmail()">SEND MY RECOMMENDATION</button>
+        </div>
+        <div class="email-skip" onclick="skipEmail()">No thanks, I'll just browse the shop</div>
+      </div>
+    </div>`;
+  messages.appendChild(wrap);
+  scrollBottom();
+}
+
+async function submitEmail() {
+  const name = document.getElementById('captureName').value.trim();
+  const email = document.getElementById('captureEmail').value.trim();
+  if (!name || !email || !email.includes('@')) {
+    alert('Please enter your name and a valid email address.');
+    return;
+  }
+
+  const btn = document.querySelector('.email-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    await fetch(ZAPIER_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        timestamp: new Date().toISOString(),
+        source: 'Freedom Wellness Advisor Widget',
+        conversation_summary: conversationHistory
+          .slice(-6)
+          .map(m => m.role.toUpperCase() + ': ' + m.content)
+          .join('\n\n')
+      })
+    });
+  } catch(e) {
+    console.error('Zapier error:', e);
+  }
+
+  document.getElementById('emailCapture').remove();
+  emailCaptured = true;
+  awaitingEmail = false;
+
+  const s = document.createElement('div');
+  s.className = 'success-msg';
+  s.innerHTML = `<p>✅ Got it, ${name}! Austin or Sam will be in touch with you soon.</p>`;
+  document.getElementById('chatMessages').appendChild(s);
+
+  addAIMessage(`Thanks ${name}! We'll follow up shortly. Feel free to keep asking me anything — I'm here to help.`);
+  scrollBottom();
+}
+
+function skipEmail() {
+  document.getElementById('emailCapture')?.remove();
+  emailCaptured = true;
+  awaitingEmail = false;
+  addAIMessage("No problem! Feel free to keep asking, or head to our shop whenever you're ready.");
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function addAIMessage(text, recommendations = []) {
+  const messages = document.getElementById('chatMessages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ai';
+
+  let recsHTML = '';
+  if (recommendations.length > 0) {
+    const cards = recommendations.map(r => `
+      <div class="rec-card ${r.isAvellum ? 'avellum-card' : ''}">
+        <div class="rec-card-info">
+          ${r.isAvellum ? '<div class="rec-card-badge">Coming September 2026</div>' : ''}
+          <div class="rec-card-name">${r.name}</div>
+          <div class="rec-card-reason">${r.reason}</div>
+          ${r.price ? `<div class="rec-card-price">${r.price}</div>` : ''}
+        </div>
+        <a href="${r.url}" target="_blank" class="rec-btn">${r.isAvellum ? 'Join Waitlist' : 'Shop Now'}</a>
+      </div>`).join('');
+    recsHTML = `<div class="recommendations">${cards}</div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="msg-avatar">FW</div>
+    <div style="flex:1">
+      <div class="msg-bubble">${text}</div>
+      ${recsHTML}
+    </div>`;
+  messages.appendChild(wrap);
+  scrollBottom();
+}
+
+function addUserMessage(text) {
+  const messages = document.getElementById('chatMessages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg user';
+  wrap.innerHTML = `<div class="msg-avatar">You</div><div class="msg-bubble">${text}</div>`;
+  messages.appendChild(wrap);
+  scrollBottom();
+}
+
+function showTyping() {
+  const messages = document.getElementById('chatMessages');
+  const t = document.createElement('div');
+  t.className = 'typing-indicator';
+  t.id = 'typingIndicator';
+  t.innerHTML = `
+    <div class="msg-avatar" style="width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;font-size:0.9rem;flex-shrink:0;">FW</div>
+    <div class="typing-dots"><span></span><span></span><span></span></div>`;
+  messages.appendChild(t);
+  scrollBottom();
+}
+
+function hideTyping() { document.getElementById('typingIndicator')?.remove(); }
+function setLoading(v) {
+  isLoading = v;
+  document.getElementById('sendBtn').disabled = v;
+  document.getElementById('userInput').disabled = v;
+}
+function scrollBottom() {
+  const m = document.getElementById('chatMessages');
+  setTimeout(() => m.scrollTop = m.scrollHeight, 60);
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+}
+function resetChat() {
+  conversationHistory = [];
+  emailCaptured = false;
+  awaitingEmail = false;
+  document.getElementById('chatMessages').innerHTML = '';
+  addAIMessage("Hi! I'm the Freedom Wellness advisor. Tell me what's going on — low energy, joint pain, gut issues, weight loss, trouble sleeping, or anything else — and I'll find exactly the right solution from our full product lineup. What's your main concern today?");
+}
+</script>
+
+</body>
+</html>
