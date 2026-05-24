@@ -112,7 +112,7 @@
     .avellum-card .rec-card-name { color: var(--white); }
     .rec-card-reason { font-size: 0.82rem; color: var(--med-gray); line-height: 1.5; }
     .avellum-card .rec-card-reason { color: rgba(255,255,255,0.65); }
-    .rec-card-price { font-size: 0.75rem; font-weight: 700; color: var(--gold); margin-top: 0.2rem; }
+    .rec-card-shop-link { font-size: 0.75rem; color: var(--med-gray); margin-top: 0.3rem; font-style: italic; }
     .rec-card-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: var(--red); color: var(--white); padding: 0.15rem 0.5rem; border-radius: 3px; margin-bottom: 0.3rem; display: inline-block; }
     .rec-btn {
       display: inline-block; background: var(--red); color: var(--white);
@@ -525,7 +525,7 @@ RESPONSE FORMAT — respond ONLY with valid JSON, no markdown, no preamble, no b
 
 If you need one clarifying question before recommending, use empty recommendations array.
 For Avellum products set isAvellum: true and url: https://www.freedomwellnessnh.com/waitlist
-Maximum 3 recommendations. Include price where known from catalog.
+Maximum 3 recommendations. Do NOT include price in recommendations.
 For products without a specific URL use https://www.amway.com/en_US/myshop/Fitzgerald`;
 
   const res = await fetch(API_ENDPOINT, {
@@ -611,12 +611,7 @@ async function submitEmail() {
   emailCaptured = true;
   awaitingEmail = false;
 
-  const s = document.createElement('div');
-  s.className = 'success-msg';
-  s.innerHTML = `<p>✅ Got it, ${name}! Austin or Sam will be in touch with you soon.</p>`;
-  document.getElementById('chatMessages').appendChild(s);
-
-  addAIMessage(`Thanks ${name}! We'll follow up shortly. Feel free to keep asking me anything — I'm here to help.`);
+  addAIMessage(`Thanks ${name}! We'll follow up with you shortly. Feel free to keep asking — I'm here to help with anything else.`);
   scrollBottom();
 }
 
@@ -643,7 +638,7 @@ function addAIMessage(text, recommendations = []) {
           ${r.isAvellum ? '<div class="rec-card-badge">Coming September 2026</div>' : ''}
           <div class="rec-card-name">${r.name}</div>
           <div class="rec-card-reason">${r.reason}</div>
-          ${r.price ? `<div class="rec-card-price">${r.price}</div>` : ''}
+          <div class="rec-card-shop-link">See pricing &amp; details →</div>
         </div>
         <a href="${r.url}" target="_blank" class="rec-btn">${r.isAvellum ? 'Join Waitlist' : 'Shop Now'}</a>
       </div>`).join('');
