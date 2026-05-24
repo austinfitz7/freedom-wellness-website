@@ -16,6 +16,26 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
+    // Log the full response for debugging
+    console.log('Anthropic status:', response.status);
+    console.log('Anthropic response:', JSON.stringify(data));
+
+    if (!response.ok) {
+      console.error('Anthropic error:', data);
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': 'https://www.freedomwellnessnh.com',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          error: true, 
+          status: response.status,
+          details: data 
+        })
+      };
+    }
+
     return {
       statusCode: 200,
       headers: {
@@ -24,7 +44,9 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify(data)
     };
+
   } catch (err) {
+    console.error('Function error:', err.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
