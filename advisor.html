@@ -564,7 +564,8 @@ function addEmailCapture() {
       <div class="email-capture">
         <p>📬 Want me to send your recommendation to your inbox? Austin or Sam will follow up personally.</p>
         <div class="email-fields">
-          <input type="text" id="captureName" placeholder="Your first name" />
+          <input type="text" id="captureName" placeholder="First name" />
+          <input type="text" id="captureLastName" placeholder="Last name" />
           <input type="email" id="captureEmail" placeholder="your@email.com" />
           <button class="email-submit" onclick="submitEmail()">SEND MY RECOMMENDATION</button>
         </div>
@@ -577,11 +578,13 @@ function addEmailCapture() {
 
 async function submitEmail() {
   const name = document.getElementById('captureName').value.trim();
+  const lastName = document.getElementById('captureLastName').value.trim();
   const email = document.getElementById('captureEmail').value.trim();
-  if (!name || !email || !email.includes('@')) {
-    alert('Please enter your name and a valid email address.');
+  if (!name || !lastName || !email || !email.includes('@')) {
+    alert('Please enter your first name, last name, and a valid email address.');
     return;
   }
+  const fullName = name + ' ' + lastName;
 
   const btn = document.querySelector('.email-submit');
   btn.disabled = true;
@@ -593,7 +596,9 @@ async function submitEmail() {
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name,
+        name: fullName,
+        first_name: name,
+        last_name: lastName,
         email,
         timestamp: new Date().toISOString(),
         source: 'Freedom Wellness Advisor Widget',
@@ -611,7 +616,7 @@ async function submitEmail() {
   emailCaptured = true;
   awaitingEmail = false;
 
-  addAIMessage(`Thanks ${name}! We'll follow up with you shortly. Feel free to keep asking — I'm here to help with anything else.`);
+  addAIMessage(`Thanks ${name}! We'll follow up with you shortly. Feel free to keep asking — I'm here to help with anything else.`); // uses first name intentionally
   scrollBottom();
 }
 
